@@ -19,18 +19,23 @@ st.set_page_config(page_title="Heart Disease Prediction", page_icon="", layout="
 # -------------------------------------------------------------------
 # Load saved models, scaler and feature list
 # -------------------------------------------------------------------
+# Directory this app.py file lives in (works no matter what the current
+# working directory is when Streamlit Cloud runs the app).
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 @st.cache_resource
 def load_artifacts():
     required_files = ['knn_model.joblib', 'svm_model.joblib',
                        'scaler.joblib', 'feature_columns.joblib']
-    missing = [f for f in required_files if not os.path.exists(f)]
+    missing = [f for f in required_files
+               if not os.path.exists(os.path.join(BASE_DIR, f))]
     if missing:
         return None, None, None, None, missing
 
-    knn_model = load('knn_model.joblib')
-    svm_model = load('svm_model.joblib')
-    scaler = load('scaler.joblib')
-    feature_columns = load('feature_columns.joblib')
+    knn_model = load(os.path.join(BASE_DIR, 'knn_model.joblib'))
+    svm_model = load(os.path.join(BASE_DIR, 'svm_model.joblib'))
+    scaler = load(os.path.join(BASE_DIR, 'scaler.joblib'))
+    feature_columns = load(os.path.join(BASE_DIR, 'feature_columns.joblib'))
     return knn_model, svm_model, scaler, feature_columns, []
 
 
